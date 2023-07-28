@@ -212,6 +212,10 @@ async def like_post(post_id: int, like: Like):
         if post["id"] == post_id and post["user_id"] == like.user_id:
             raise HTTPException(status_code=400, detail="You cannot like your own post")
 
+        # Проверяем, что пост с указанным post_id существует
+    if not any(post["id"] == post_id for post in posts_db):
+        raise HTTPException(status_code=404, detail="Post not found")
+
     like_data = like.model_dump()
     like_data["post_id"] = post_id
 
