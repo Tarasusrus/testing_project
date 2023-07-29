@@ -247,6 +247,10 @@ async def dislike_post(post_id: int, dislike: Dislike):
         if post["id"] == post_id and post["user_id"] == dislike.user_id:
             raise HTTPException(status_code=400, detail="You cannot dislike your own post")
 
+    # Проверяем, что пост с указанным post_id существует
+    if not any(post["id"] == post_id for post in posts_db):
+        raise HTTPException(status_code=404, detail="Post not found")
+
     dislike_data = dislike.model_dump()
     dislike_data["post_id"] = post_id
 
